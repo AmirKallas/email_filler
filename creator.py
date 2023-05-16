@@ -48,24 +48,24 @@ for candidato in rows_candidati:
             print(rows_anagskill)
             
 
-transfertWorkbook = openpyxl.load_workbook(filename = TRANSFERT_PATH, read_only=True, data_only=False)
+transfertWorkbook = openpyxl.load_workbook(filename = TRANSFERT_PATH, read_only=True, data_only=True)
 print('---------------------CICICICICIC----------------------------------------------------------')
 # candidatiTrf = transfertWorkbook['Candidati']
 # anagSkillTrf = transfertWorkbook['AnagSkill']
 
-newWorkbook = xlsxwriter.Workbook('provaTransfer.xlsx', options={'constant-memory' : True})
-print('---------------------CICICICICIC----------------------------------------------------------')
+newWorkbook = xlsxwriter.Workbook('provaTransfer.xlsx')
+print(newWorkbook)
 for sheet_name in transfertWorkbook.sheetnames:
-    print('---------------------CICICICICIC----------------------------------------------------------')
+    print(sheet_name)
     sheet = transfertWorkbook[sheet_name]
-    print('---------------------CICICICICIC----------------------------------------------------------')
+    print(sheet)
     new_sheet = newWorkbook.add_worksheet(sheet_name)
-    print('---------------------CICICICICIC----------------------------------------------------------')
+    print(new_sheet)
     for row_num, row in enumerate(sheet.iter_rows()):
         for col_num, cell in enumerate(row):
             new_sheet.write(row_num, col_num, cell.value)
             
-# # newWorkbook.close()
+newWorkbook.close()
 # print('---------------------CICICICICIC----------------------------------------------------------')
 
 
