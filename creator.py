@@ -1,10 +1,13 @@
 import openpyxl
 import datetime
+import pandas as pd
 
 HRR_PATH = 'C:\\Users\\amirk\\Desktop\\filler_data\\DBC-Lab(HRR).xlsx'
 TRANSFERT_PATH = 'C:\\Users\\amirk\\Desktop\\filler_data\\DBC-Lab(Transfer).xlsx'
 
 hrrWorkbook = openpyxl.load_workbook(HRR_PATH, read_only=True, data_only=True)
+##transfertWorkbook = openpyxl.load_workbook(TRANSFERT_PATH, read_only=False, data_only=False)
+
 candidatiHrr = hrrWorkbook['Candidati']
 anagSkill = hrrWorkbook['AnagSkill']
 
@@ -41,8 +44,7 @@ for riga in row_cells:
             print(tempList1)
             
             
-            
-    
+
         
     
 
