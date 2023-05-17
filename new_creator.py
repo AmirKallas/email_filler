@@ -5,17 +5,29 @@ from datetime import date
 
 # APERTURA FILES
 warnings.simplefilter(action="ignore", category=UserWarning)
-xlsFile = pd.ExcelFile("C:\\Users\\amirk\\Desktop\\ACE10001I C-Lab HR\\ACE10001I C-Lab HR\\DB C-Lab (HRR).xlsx")
+xlsxFileHrr = pd.ExcelFile("C:\\Users\\amirk\\Desktop\\ACE10001I C-Lab HR\\ACE10001I C-Lab HR\\DB C-Lab (HRR).xlsx")
+xlsxFileTrf = pd.ExcelFile("C:\\Users\\amirk\\Desktop\\ACE10001I C-Lab HR\\ACE10001I C-Lab HR\\DB C-Lab (Transfer).xlsx")
 anagHrr = pd.read_excel(
-    xlsFile,
+    xlsxFileHrr,
     sheet_name="AnagSkill",
     header=0,
 )
 candHrr = pd.read_excel(
-    xlsFile,
+    xlsxFileHrr,
     sheet_name="Candidati",
     header=0,
 )
+anagTrf = pd.read_excel(
+    xlsxFileTrf,
+    sheet_name="AnagSkill",
+    header=0,
+)
+candTrf = pd.read_excel(
+    xlsxFileTrf,
+    sheet_name="Candidati",
+    header=0,
+)
+
 #print(candHrr) 
 #print(candHrr.iloc[:5, :13])
 # stato = candHrr[candHrr['Data invio CV al cliente'].str.contains('05-15-2023', na=False)]['Id candidato'].values
@@ -50,6 +62,16 @@ for index, row in anagHrr.iterrows():
     # print(row)
     
 print(type(anagRows[0]))
+
+##MOOOOLLTO TEORICAMENTE QUESTO LOOP AZZERA TUTTI I VALORI NELLE CELLE DEL ANAGSKILL TRANSFER, 
+#A ME NON FUNZIONA
+for index, row in anagTrf.iterrows():
+    for key, val in row.items():
+        anagTrf.loc[key] = ' ' # type: ignore
+    
+xlsxFileTrf.close()
+print('ok')
+
 
 
             
