@@ -34,7 +34,7 @@ for row_num in range(1, 5):
 
 # print(', '.join(row_cells))
 # print(row_cells)
-
+print(rows)
 for candidato in rows_candidati:
     idCandidato = int(candidato[7])
     for row_num in range(1, 5):
@@ -50,22 +50,27 @@ for candidato in rows_candidati:
 
 transfertWorkbook = openpyxl.load_workbook(filename = TRANSFERT_PATH, read_only=True, data_only=True)
 print('---------------------CICICICICIC----------------------------------------------------------')
+
+print(rows_anagskill)
+print(rows_candidati)
+print(TODAY)
+
 # candidatiTrf = transfertWorkbook['Candidati']
 # anagSkillTrf = transfertWorkbook['AnagSkill']
 
-newWorkbook = xlsxwriter.Workbook('provaTransfer.xlsx')
-print(newWorkbook)
-for sheet_name in transfertWorkbook.sheetnames:
-    print(sheet_name)
-    sheet = transfertWorkbook[sheet_name]
-    print(sheet)
-    new_sheet = newWorkbook.add_worksheet(sheet_name)
-    print(new_sheet)
-    for row_num, row in enumerate(sheet.iter_rows()):
-        for col_num, cell in enumerate(row):
-            new_sheet.write(row_num, col_num, cell.value)
+# newWorkbook = xlsxwriter.Workbook('provaTransfer.xlsx')
+#print(newWorkbook)
+# for sheet_name in transfertWorkbook.sheetnames:
+#     print(sheet_name)
+#     sheet = transfertWorkbook[sheet_name]
+#     print(sheet)
+#     new_sheet = newWorkbook.add_worksheet(sheet_name)
+#     print(new_sheet)
+#     for row_num, row in enumerate(sheet.iter_rows()):
+#         for col_num, cell in enumerate(row):
+#             new_sheet.write(row_num, col_num, cell.value)
             
-newWorkbook.close()
+# newWorkbook.close()
 # print('---------------------CICICICICIC----------------------------------------------------------')
 
 
