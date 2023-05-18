@@ -74,7 +74,14 @@ print('ok')
 
 
 
-            
+# print(type(idCand[0]))
+# print(type(candRows[0]))
+print(type(anagRows))
+print(candRows[0]) 
+
+with pd.ExcelWriter('prova2.xlsx') as writer:
+    candRows[1].transpose().to_excel(writer, index= False)
+               
         
          
 
