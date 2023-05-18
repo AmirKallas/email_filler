@@ -97,3 +97,74 @@ def seleziona_e_copia_righe(path_db, path_transfer, path_dest):
 # Chiamo la funzione seleziona_e_copia_righe con i path dei file xlsx
 seleziona_e_copia_righe(path_db, path_transfer, path_invio)
 
+import smtplib, ssl, email, yagmail
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from email.mime.base import MIMEBase
+from email import encoders
+
+def send_email(sender_email, sender_password, reciver_email, subject, message, file_names=None):
+    # Crea l'oggetto del messaggio
+    msg = MIMEMultipart()
+    msg['From'] = sender_email
+    msg['To'] = reciver_email
+    msg['Subject'] = subject
+
+    # Aggiunge il corpo del messaggio
+    msg.attach(MIMEText(message, 'plain'))
+
+    # Aggiunge gli allegati, se presenti
+    if file_names:
+        for fileName in file_names:
+            with open(fileName, 'rb') as attachment:
+                part = MIMEBase('application', 'octet-stream')
+                part.set_payload(attachment.read())
+            encoders.encode_base64(part)
+            part.add_header('Content-Disposition', f'attachment; filename="{fileName}"')
+            msg.attach(part)
+            
+    text = msg.as_string()  
+    print(text)      
+    context = ssl.create_default_context()
+    # with smtplib.SMTP_SSL("smtp.libero.it", 465, context=context) as server:
+    # with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=context) as server:
+    #     server.helo()
+    #     #server.connect("smtp.libero.it", 465)
+    #     #server.helo()
+    #     # server.auth_login
+    #     server.login(sender_email, sender_password)
+    #     server.helo()
+    #     server.sendmail(sender_email, reciver_email, text)
+    # try:
+    #     server = smtplib.SMTP("smtp.gmail.com", 587)
+    #     server.helo()
+    #     server.starttls(context=context)
+    #     server.helo()
+    #     server.login(sender_email, sender_password)
+    #     server.sendmail(sender_email, reciver_email, text)
+    #     print('Email inviata con successo!')
+    #     server.quit()
+    # except Exception as e:
+    #     print(e)
+    try:
+        yag = yagmail.SMTP(sender_email, sender_password, "smtp.libero.it", 465)
+        yag.send(to=reciver_email, subject=subject, contents=text)
+    except Exception as e:
+        print(e)
+    
+    
+    
+# Specifica gli allegati, se necessario
+allegati = [path_invio]
+# Esempio di utilizzo
+# sender_email = 'prova.test.camerana@gmail.com'
+# sender_password = 'PasswordNuova1'
+sender_email = 'prova.camerana@libero.it'
+sender_password = 'PasswordDifficile1!'
+recipient_email = 'amir.kallas2cs@gmail.com'
+subject = 'Curriculum Candidati'
+message = 'Questo è il corpo del messaggio.'
+
+send_email(sender_email, sender_password, recipient_email, subject, message, allegati)
+print('ok')
+
