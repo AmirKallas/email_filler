@@ -10,12 +10,13 @@ warnings.simplefilter("ignore")
 
 # Setto la variabile di ambiente User e setto il path dei file xlsx e pdf
 userprofile = os.environ.get("userprofile")
-path_db = os.path.join("C:/Users", userprofile, "Desktop/ACE10001_C-Lab_HR/DB_C-Lab_(HRR).xlsx") # type: ignore
-path_transfer = os.path.join("C:/Users", userprofile, "Desktop/ACE10001_C-Lab_HR/DB_C-Lab_(Transfer).xlsx") # type: ignore
-# path_db = os.path.join("C:/Users/amirk/Desktop/ACE10001_C-Lab_HR/DB_C-Lab_(HRR).xlsx")
-# path_transfer = os.path.join("C:/Users/amirk/Desktop/ACE10001_C-Lab_HR/DB_C-Lab_(Transfer).xlsx")
-path_invio = os.path.join("C:/Users/amirk/Desktop/ACE10001_C-Lab_HR/prova(Transfer).xlsx")
-def seleziona_e_copia_righe(path_db, path_transfer, path_dest):
+#path_db = os.path.join("C:/Users", userprofile, "Desktop/ACE10001_C-Lab_HR/DB_C-Lab_(HRR).xlsx")
+# path_transfer = os.path.join("C:/Users", userprofile, "Desktop/ACE10001_C-Lab_HR/DB_C-Lab_(Transfer).xlsx")
+path_db = os.path.join("C:/Users/amirk/Desktop/ACE10001_C-Lab_HR/DB_C-Lab_(HRR).xlsx")
+path_transfer = os.path.join("C:/Users/amirk/Desktop/ACE10001_C-Lab_HR/DB_C-Lab_(Transfer).xlsx")
+#path_invio = os.path.join("C:/Users/amirk/Desktop/ACE10001_C-Lab_HR/prova(Transfer).xlsx")
+path_invio = "C:/Users/amirk/Desktop/ACE10001_C-Lab_HR/prova(Transfer).xlsx"
+def seleziona_e_copia_righe(path_db, path_dest):
     """Seleziona e copia le righe del foglio Candidati che contengono una data inserita dall'utente.
 
     Parametri:
@@ -88,14 +89,14 @@ def seleziona_e_copia_righe(path_db, path_transfer, path_dest):
         print(copia_righe)
         print('OOOOOOKKKK')
     
-    except ValueError:
-       print("La data inserita non è valida. Riprova con un formato corretto.")
+    # except ValueError:
+    #    print("La data inserita non è valida. Riprova con un formato corretto.")
     
     except FileNotFoundError:
         print("Uno o entrambi i file excel non sono stati trovati. Controlla i path.")
 
 # Chiamo la funzione seleziona_e_copia_righe con i path dei file xlsx
-seleziona_e_copia_righe(path_db, path_transfer, path_invio)
+seleziona_e_copia_righe(path_db, path_invio)
 
 import smtplib, ssl, email, yagmail
 from email.mime.multipart import MIMEMultipart
@@ -103,60 +104,49 @@ from email.mime.text import MIMEText
 from email.mime.base import MIMEBase
 from email import encoders
 
-def send_email(sender_email, sender_password, reciver_email, subject, message, file_names=None):
+def send_email(sender_email, sender_password, recipient_email, subject, message, file_names=None):
     # Crea l'oggetto del messaggio
     msg = MIMEMultipart()
-    msg['From'] = sender_email 
-    msg['To'] = reciver_email
+    msg['From'] = sender_email
+    msg['To'] = recipient_email
     msg['Subject'] = subject
 
     # Aggiunge il corpo del messaggio
     msg.attach(MIMEText(message, 'plain'))
-    
+
     # Aggiunge gli allegati, se presenti
     if file_names:
         for fileName in file_names:
             with open(fileName, 'rb') as attachment:
                 part = MIMEBase('application', 'octet-stream')
                 part.set_payload(attachment.read())
-            encoders.encode_base64(part)
-            part.add_header('Content-Disposition', f'attachment; filename="{fileName}"')
+            #encoders.encode_base64(part)  # Codifica l'allegato in base64
+            #encoders.encode_7or8bit(part)
+            part.add_header('Content-Disposition', 'attachment', filename=fileName)
             msg.attach(part)
             
-    text = msg.as_string()  
-    print(text)      
-    #context = ssl.create_default_context()
-    # with smtplib.SMTP_SSL("smtp.libero.it", 465, context=context) as server:
-    # with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=context) as server:
-    #     server.helo()
-    #     #server.connect("smtp.libero.it", 465)
-    #     #server.helo()
-    #     # server.auth_login
-    #     server.login(sender_email, sender_password)
-    #     server.helo()
-    #     server.sendmail(sender_email, reciver_email, text)
-    # try:
-    #     server = smtplib.SMTP("smtp.gmail.com", 587)
-    #     server.helo()
-    #     server.starttls(context=context)
-    #     server.helo()
-    #     server.login(sender_email, sender_password)
-    #     server.sendmail(sender_email, reciver_email, text)
-    #     print('Email inviata con successo!')
-    #     server.quit()
-    # except Exception as e:
-    #     print(e)
+    # text = msg.as_string()
+    #print(text)
+    print(msg)
+    context = ssl.create_default_context()
+ 
     try:
+        # yag = yagmail.SMTP(sender_email, sender_password, "smtp.gmail.com", 465)
         yag = yagmail.SMTP(sender_email, sender_password, "smtp.libero.it", 465)
-        yag.send(to=reciver_email, subject=subject, contents=text)
+        # yag.send(to=recipient_email, subject=subject, contents=text)
+        yag.send(to=recipient_email, subject=subject, contents=msg)
+        # smtp = smtplib.SMTP("smtp.gmail.com", 465)
+        # # if isTls:
+        # smtp.starttls()
+        # smtp.login(sender_email, sender_password)
+        # smtp.sendmail(sender_email, recipient_email, text)
+        # smtp.quit()
     except Exception as e:
         print(e)
-    
-    
-    
+
+
 # Specifica gli allegati, se necessario
-allegati = [path_invio]
-# Esempio di utilizzo
+allegati = ["C:/Users/amirk/Desktop/ACE10001_C-Lab_HR/prova(Transfer).xlsx"]
 # sender_email = 'prova.test.camerana@gmail.com'
 # sender_password = 'PasswordNuova1'
 sender_email = 'prova.camerana@libero.it'
@@ -166,5 +156,6 @@ subject = 'Curriculum Candidati'
 message = 'Questo è il corpo del messaggio.'
 
 send_email(sender_email, sender_password, recipient_email, subject, message, allegati)
+
 print('ok')
 
